@@ -15,12 +15,9 @@ import javax.validation.constraints.NotNull;
 /**
  * An implementation of concrete physical table with permissive availability.
  * <p>
- * This is different from its parent <tt>ConcretePhysicalTable</tt>. <tt>PermissiveConcretePhysicalTable</tt>
- * is backed <tt>PermissiveAvailability</tt>. As a result, {@link PhysicalTable#getAvailability()} will return
- * the <tt>PermissiveAvailability</tt>. Returning a different <tt>Availability</tt> affects how available intervals
- * of a table are calculated and returned.
- * For example see {@link com.yahoo.bard.webservice.table.BasePhysicalTable#getAvailableIntervals(DataSourceConstraint)}
- * {@link BasePhysicalTable#getAllAvailableIntervals()}, and {@link BasePhysicalTable#getTableAlignment()}.
+ * This is different from its parent {@link ConcretePhysicalTable}. {@link PermissiveConcretePhysicalTable} is backed
+ * {@link PermissiveAvailability}. The different {@link Availability} affects how available intervals of a table are
+ * calculated and returned.
  */
 public class PermissiveConcretePhysicalTable extends ConcretePhysicalTable {
     /**

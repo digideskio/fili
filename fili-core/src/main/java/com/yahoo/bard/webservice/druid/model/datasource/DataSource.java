@@ -5,13 +5,13 @@ package com.yahoo.bard.webservice.druid.model.datasource;
 import com.yahoo.bard.webservice.data.config.names.TableName;
 import com.yahoo.bard.webservice.druid.model.query.DruidQuery;
 import com.yahoo.bard.webservice.table.PhysicalTable;
+import com.yahoo.bard.webservice.table.availability.Availability;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 import java.util.Collections;
 import java.util.Set;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -53,14 +53,12 @@ public abstract class DataSource {
      */
     @JsonInclude(JsonInclude.Include.NON_NULL)
     public Set<String> getNames() {
-        return Collections.unmodifiableSet(getPhysicalTables()
-                .stream()
+        return getPhysicalTables().stream()
                 .map(PhysicalTable::getAvailability)
-                .map(it -> it.getDataSourceNames().stream())
-                .flatMap(Function.identity())
+                .map(Availability::getDataSourceNames)
+                .flatMap(Set::stream)
                 .map(TableName::asName)
-                .collect(Collectors.toSet())
-        );
+                .collect(Collectors.collectingAndThen(Collectors.toSet(), Collections::unmodifiableSet));
     }
 
     /**

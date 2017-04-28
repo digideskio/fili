@@ -31,9 +31,9 @@ public interface PhysicalTable extends Table {
     TableName getTableName();
 
     /**
-     * Get the value of the actual availability for this physical table.
+     * Get the value of the backing availability instance for this physical table.
      *
-     * @return The current actual physical availability or a runtime exception if there isn't one yet.
+     * @return The availability or a runtime exception if there isn't one.
      */
     Availability getAvailability();
 
