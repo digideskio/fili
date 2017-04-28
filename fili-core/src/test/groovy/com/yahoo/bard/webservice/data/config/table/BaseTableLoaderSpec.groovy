@@ -26,8 +26,6 @@ import org.joda.time.DateTimeZone
 
 import spock.lang.Specification
 
-import java.util.stream.Collectors
-
 /**
  * Testing basic table loader functionality.
  */
@@ -60,27 +58,19 @@ class BaseTableLoaderSpec extends Specification {
 
         @Override
         Set<TableName> getDependentTableNames() {
-            if (Objects.isNull(dependentTableName)) {
-                return Collections.emptySet()
-            }
-            return Collections.singleton(TableName.of(dependentTableName));
+            Objects.isNull(dependentTableName) ? [] : [TableName.of(dependentTableName)]
         }
 
         @Override
-        PhysicalTable build(
-                ResourceDictionaries dictionaries,
-                DataSourceMetadataService metadataService
-        ) {
-            if (!Objects.isNull(physicalTable)) {
-                return physicalTable
-            }
-            return new ConcretePhysicalTable(
-                    TableName.of(getName().asName()),
-                    DefaultTimeGrain.DAY.buildZonedTimeGrain(DateTimeZone.UTC),
-                    [] as Set,
-                    [:],
-                    metadataService
-            )
+        PhysicalTable build(ResourceDictionaries dictionaries, DataSourceMetadataService metadataService) {
+            physicalTable ?:
+                    new ConcretePhysicalTable(
+                            TableName.of(getName().asName()),
+                            DefaultTimeGrain.DAY.buildZonedTimeGrain(DateTimeZone.UTC),
+                            [] as Set,
+                            [:],
+                            metadataService
+                    )
         }
     }
 
@@ -111,19 +101,19 @@ class BaseTableLoaderSpec extends Specification {
         metricNames = TestDruidMetricName.getByLogicalTable(SHAPES)
         physDefs = TestPhysicalTableDefinitionUtils.buildShapeTableDefinitions(new TestDimensions(), metricNames)
         dimNames = TestApiDimensionName.getByLogicalTable(SHAPES)
-        tableNames = physDefs.collect {it.name} as Set
+        tableNames = physDefs.name as Set
 
         dims = dimNames.collect {
             name -> new KeyValueStoreDimension(TestDimensions.buildStandardDimensionConfig(name))
         }
-        dicts.getDimensionDictionary().addAll(dims)
+        dicts.dimensionDictionary.addAll(dims)
 
         physicalTableSchema = Mock(PhysicalTableSchema)
         physicalTableSchema.getColumns(DimensionColumn.class) >> []
 
         physicalTable = Mock(PhysicalTable)
         physicalTable.getTableName() >> TableName.of('definition2')
-        physicalTable.getSchema() >> physicalTableSchema
+        physicalTable.schema >> physicalTableSchema
 
         dependentDefinition1 = new SimpleDependencyPhysicalTableDefinition('definition1', 'definition2')
         satisfiedDefinition2 = new SimpleDependencyPhysicalTableDefinition('definition2', physicalTable)
@@ -150,7 +140,6 @@ class BaseTableLoaderSpec extends Specification {
         group.apiMetricNames == apiNames
     }
 
-
     def "loading distinct physical tables without dependency results in correct tables in dictionary and table group"() {
         when:
         TableGroup group = loader.buildDimensionSpanningTableGroup(
@@ -167,7 +156,7 @@ class BaseTableLoaderSpec extends Specification {
 
     def "loading physical tables with dependency loads all satisfied dependency physical tables"() {
         given:
-        Set<TableName> currentTableNames = [dependentDefinition1.name, satisfiedDefinition2.name, dependentDefinition3.name]
+        Set<TableName> currentTableNames = [dependentDefinition1, satisfiedDefinition2, dependentDefinition3].name
 
         when:
         TableGroup group = loader.buildDimensionSpanningTableGroup(
@@ -184,7 +173,7 @@ class BaseTableLoaderSpec extends Specification {
 
     def "loading a physical table with dependency outside of the current table group will be loaded successfully"() {
         given:
-        Set<TableName> currentTableNames = [satisfiedDefinition2.name, dependentDefinition3.name]
+        Set<TableName> currentTableNames = [satisfiedDefinition2, dependentDefinition3].name
 
         when:
         TableGroup group = loader.buildDimensionSpanningTableGroup(
@@ -201,7 +190,7 @@ class BaseTableLoaderSpec extends Specification {
 
     def "unsatisfied dependency physical table definition loading will throw an exception"() {
         given:
-        Set<TableName> currentTableNames = [satisfiedDefinition2.name, dependentDefinition3.name]
+        Set<TableName> currentTableNames = [satisfiedDefinition2, dependentDefinition3].name
 
         when:
         loader.buildDimensionSpanningTableGroup(
@@ -218,7 +207,13 @@ class BaseTableLoaderSpec extends Specification {
 
     def "circular dependency physical table definition loading will throw an exception"() {
         given:
-        Set<TableName> currentTableNames = [dependentDefinition1.name, satisfiedDefinition2.name, dependentDefinition3.name, circularDependentDefinition5.name, circularDependentDefinition6.name]
+        Set<TableName> currentTableNames = [
+                dependentDefinition1,
+                satisfiedDefinition2,
+                dependentDefinition3,
+                circularDependentDefinition5,
+                circularDependentDefinition6
+        ].name
 
         when:
         loader.buildDimensionSpanningTableGroup(
@@ -235,7 +230,12 @@ class BaseTableLoaderSpec extends Specification {
 
     def "self dependency physical table definition loading will throw an exception"() {
         given:
-        Set<TableName> currentTableNames = [dependentDefinition1.name, satisfiedDefinition2.name, dependentDefinition3.name, selfDependentDefinition4.name]
+        Set<TableName> currentTableNames = [
+                dependentDefinition1,
+                satisfiedDefinition2,
+                dependentDefinition3,
+                selfDependentDefinition4
+        ].name
 
         when:
         loader.buildDimensionSpanningTableGroup(
