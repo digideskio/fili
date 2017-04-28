@@ -3,6 +3,7 @@
 package com.yahoo.bard.webservice.table;
 
 import com.yahoo.bard.webservice.data.config.names.TableName;
+import com.yahoo.bard.webservice.data.config.names.DataSourceName;
 import com.yahoo.bard.webservice.data.time.ZonedTimeGrain;
 import com.yahoo.bard.webservice.table.availability.Availability;
 import com.yahoo.bard.webservice.table.resolver.DataSourceConstraint;
@@ -29,6 +30,13 @@ public interface PhysicalTable extends Table {
      * @return name of the table as TableName
      */
     TableName getTableName();
+
+    /**
+     * Get the names of the data sources that back this physical table.
+     *
+     * @return the names of all data sources that back this physical table.
+     */
+    Set<DataSourceName> getDataSourceNames();
 
     /**
      * Get the value of the backing availability instance for this physical table.

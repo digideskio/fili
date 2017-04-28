@@ -9,6 +9,12 @@ Current
 -------
 ### Added:
 
+- [Add `DataSourceName` concept, removing responsibility from `TableName`](https://github.com/yahoo/fili/pull/263)
+    * `TableName` was serving double-duty, and it was causing problems and confusion. Splitting the concepts fixes it.
+
+- [Add a `BaseMetadataAvailability` as a parallel to `BaseCompositeAvailability`](https://github.com/yahoo/fili/pull/263)
+    * `Concrete` and `PermissiveAvailability` both extend this new base `Availability`
+
 - [Prepare For Partial Data V2](https://github.com/yahoo/fili/pull/264)
     * Add new query context for druid's uncovered interval feature
     * Add a configurable property named "druid_uncovered_interval_limit"
@@ -104,6 +110,16 @@ Current
 - [Support timeouts for lucene search provider](https://github.com/yahoo/fili/pull/183)
 
 ### Changed:
+
+- [Add `DataSourceName` concept, removing responsibility from `TableName`](https://github.com/yahoo/fili/pull/263)
+    * Impacts:
+        - `DataSource` & children
+        - `DataSourceMetadataService` & `DataSourceMetadataLoader`
+        - `SegmentIntervalsHashIdGenerator`
+        - `PhysicalTable` & children
+        - `Availability` & children
+        - `ErrorMessageFormat`
+        - `SlicesApiRequest`
 
 - [Force `ConcretePhysicalTable` only take a `ConcreteAvailability`](https://github.com/yahoo/fili/pull/263)
     * Only a `ConcreteAvailability` makes sense, so let the types enforce it
@@ -285,6 +301,11 @@ Current
     * Converted to 404 when error was cause by not finding a path element
 
 ### Deprecated:
+
+- [Add `DataSourceName` concept, removing responsibility from `TableName`](https://github.com/yahoo/fili/pull/263)
+    * Impacts:
+        - `DataSourceMetadataService` & `DataSourceMetadataLoader`
+        - `ConcretePhysicalTable`
 
 - [Deprecate old static `TableName` comparator](https://github.com/yahoo/fili/pull/263)
     * Change to `AS_NAME_COMPARATOR`, so the old name is deprecated

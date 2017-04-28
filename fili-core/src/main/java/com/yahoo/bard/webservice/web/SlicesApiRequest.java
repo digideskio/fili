@@ -20,7 +20,6 @@ import org.joda.time.Interval;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -190,8 +189,8 @@ public class SlicesApiRequest extends ApiRequest {
                 }
         );
 
-        Set<SortedMap<DateTime, Map<String, SegmentInfo>>> sliceMetadata = dataSourceMetadataService.getTableSegments(
-                Collections.singleton(table.getTableName())
+        Set<SortedMap<DateTime, Map<String, SegmentInfo>>> sliceMetadata = dataSourceMetadataService.getSegments(
+                table.getDataSourceNames()
         );
 
         Map<String, Object> generated = new LinkedHashMap<>();

@@ -2,7 +2,7 @@
 // Licensed under the terms of the Apache license. Please see LICENSE.md file distributed with this work for terms.
 package com.yahoo.bard.webservice.table.availability;
 
-import com.yahoo.bard.webservice.data.config.names.TableName;
+import com.yahoo.bard.webservice.data.config.names.DataSourceName;
 import com.yahoo.bard.webservice.table.resolver.PhysicalDataSourceConstraint;
 import com.yahoo.bard.webservice.util.SimplifiedIntervalList;
 
@@ -19,7 +19,7 @@ public interface Availability {
      *
      * @return A set of names for datasources backing this table
      */
-    Set<TableName> getDataSourceNames();
+    Set<DataSourceName> getDataSourceNames();
 
     /**
      * The availability of all columns.
