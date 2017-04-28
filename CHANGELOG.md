@@ -111,6 +111,9 @@ Current
 
 ### Changed:
 
+- [Make `MetricUnionAvailability` take a set of `Availability` instead of `PhysicalTable`](https://github.com/yahoo/fili/pull/263)
+    * Since it was just unwrapping anyways, simplifying the dependency and pushing the unwrap up-stream makes sense
+
 - [Add `DataSourceName` concept, removing responsibility from `TableName`](https://github.com/yahoo/fili/pull/263)
     * Impacts:
         - `DataSource` & children
