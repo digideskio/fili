@@ -28,7 +28,10 @@ public interface PhysicalTable extends Table {
      * Get the name of the current table.
      *
      * @return name of the table as TableName
+     *
+     * @deprecated  Use Table::getName instead
      */
+    @Deprecated
     TableName getTableName();
 
     /**
