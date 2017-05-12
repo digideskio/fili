@@ -103,7 +103,7 @@ class ClassScannerSpec extends Specification {
      */
     @IgnoreIf({ClassScannerSpec.getClassesDeclaring("equals", Object.class).empty})
     @Unroll
-    def "test equals #cls.simpleName"() {
+    def "test equals for #className"() {
         expect:
         // Create test object with default values
         Object obj1 = classScanner.constructObject( cls, ClassScanner.Args.VALUES )
@@ -136,10 +136,11 @@ class ClassScannerSpec extends Specification {
 
         where:
         cls << getClassesDeclaring("equals", Object.class)
+        className = cls.simpleName
     }
 
     @Unroll
-    def "test toString #cls.simpleName runs"() {
+    def "test toString for #className runs"() {
         expect:
         Object obj
         try {
@@ -154,6 +155,7 @@ class ClassScannerSpec extends Specification {
         obj.toString() != null
 
         where:
-        cls << getClassesDeclaring("toString" )
+        cls << getClassesDeclaring("toString")
+        className = cls.simpleName
     }
 }
