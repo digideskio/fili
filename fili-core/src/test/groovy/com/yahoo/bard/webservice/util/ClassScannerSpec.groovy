@@ -69,25 +69,18 @@ class ClassScannerSpec extends Specification {
                 JobRow
         ]
 
-        for ( Class cls : classScanner.getClasses() ) {
+        for (Class cls : classScanner.classes) {
             // test only classes that override equals
-            if (Modifier.isAbstract(cls.getModifiers())) {
-                continue
-            }
-            if (cls.isEnum()) {
-                continue
-            }
-            if (Pattern.matches(anonymousClassPattern, cls.name)) {
+            if (Modifier.isAbstract(cls.modifiers) || cls.enum || Pattern.matches(anonymousClassPattern, cls.name)) {
                 continue
             }
 
-            /* check if this class or any superclass (except ignore list) implements .equals */
+            // check if this class or any superclass (except ignore list) implements .equals
             try {
-                Class declaringClass = cls.getMethod(method,parameterTypes).getDeclaringClass()
-                if ( ignoreDeclaringClasses.contains( declaringClass ) ) {
+                if (ignoreDeclaringClasses.contains(cls.getMethod(method, parameterTypes).declaringClass)) {
                     continue
                 }
-            } catch ( NoSuchMethodException | UnsupportedOperationException e ) {
+            } catch (NoSuchMethodException | UnsupportedOperationException ignored) {
                 continue
             }
 
@@ -108,7 +101,7 @@ class ClassScannerSpec extends Specification {
      * This is an issue because downstream developers may want to defensively deploy subclasses of this class to
      * ensure that any legitimate class scanner targets are picked up when discovered and appropriate.
      */
-    @IgnoreIf({ ClassScannerSpec.getClassesDeclaring("equals", Object.class).empty })
+    @IgnoreIf({ClassScannerSpec.getClassesDeclaring("equals", Object.class).empty})
     @Unroll
     def "test equals #cls.simpleName"() {
         expect:
@@ -127,13 +120,13 @@ class ClassScannerSpec extends Specification {
         // attempt to create third object with nulls and if able, call functions, test for not equals
         Object objNulls
         try {
-            objNulls = classScanner.constructObject( cls, ClassScanner.Args.NULLS  )
-        } catch ( InstantiationException e ) {
+            objNulls = classScanner.constructObject(cls, ClassScanner.Args.NULLS)
+        } catch (InstantiationException ignored) {
             objNulls = null
         }
 
         // make sure these calls run and do not fail with NullPointerException
-        if ( objNulls != null ) {
+        if (objNulls != null) {
             objNulls.equals(null)
             objNulls.equals(new Object())
             ! obj1.equals(objNulls) || obj1.hashCode() == objNulls.hashCode()
@@ -148,14 +141,13 @@ class ClassScannerSpec extends Specification {
     @Unroll
     def "test toString #cls.simpleName runs"() {
         expect:
-
         Object obj
         try {
             // Create test object with NULL values
-            obj = classScanner.constructObject( cls, ClassScanner.Args.NULLS  )
-        } catch ( InstantiationException e ) {
+            obj = classScanner.constructObject(cls, ClassScanner.Args.NULLS)
+        } catch (InstantiationException ignored) {
             // else create test object with default values.  If fails here consider making Mock argument in setupSpec
-            obj = classScanner.constructObject( cls, ClassScanner.Args.VALUES  )
+            obj = classScanner.constructObject(cls, ClassScanner.Args.VALUES)
         }
 
         // make sure toString does not blow up
