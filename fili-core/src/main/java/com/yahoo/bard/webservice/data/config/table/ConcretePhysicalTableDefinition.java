@@ -8,7 +8,7 @@ import com.yahoo.bard.webservice.data.config.names.FieldName;
 import com.yahoo.bard.webservice.data.config.names.TableName;
 import com.yahoo.bard.webservice.data.time.ZonedTimeGrain;
 import com.yahoo.bard.webservice.metadata.DataSourceMetadataService;
-import com.yahoo.bard.webservice.table.ConcretePhysicalTable;
+import com.yahoo.bard.webservice.table.StrictPhysicalTable;
 import com.yahoo.bard.webservice.table.PhysicalTable;
 
 import java.util.Collections;
@@ -63,7 +63,7 @@ public class ConcretePhysicalTableDefinition extends PhysicalTableDefinition {
 
     @Override
     public PhysicalTable build(ResourceDictionaries dictionaries, DataSourceMetadataService metadataService) {
-        return new ConcretePhysicalTable(
+        return new StrictPhysicalTable(
                         getName(),
                         getTimeGrain(),
                         buildColumns(dictionaries.getDimensionDictionary()),

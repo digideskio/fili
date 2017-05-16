@@ -20,7 +20,7 @@ import com.yahoo.bard.webservice.druid.model.datasource.DataSource
 import com.yahoo.bard.webservice.druid.model.query.DruidAggregationQuery
 import com.yahoo.bard.webservice.models.druid.client.impl.TestDruidWebService
 import com.yahoo.bard.webservice.table.Column
-import com.yahoo.bard.webservice.table.ConcretePhysicalTable
+import com.yahoo.bard.webservice.table.StrictPhysicalTable
 import com.yahoo.bard.webservice.table.PhysicalTable
 import com.yahoo.bard.webservice.table.PhysicalTableDictionary
 
@@ -214,7 +214,7 @@ class DataSourceMetadataLoaderSpec extends Specification {
                 MAPPERS.mapper
         )
         druidWS.jsonResponse = {gappyDataSourceMetadataJson}
-        ConcretePhysicalTable table = Mock(ConcretePhysicalTable)
+        StrictPhysicalTable table = Mock(StrictPhysicalTable)
         table.dataSourceName >> DataSourceName.of("test")
         DataSourceMetadata capture
 
@@ -246,7 +246,7 @@ class DataSourceMetadataLoaderSpec extends Specification {
                 testWs,
                 MAPPERS.mapper
         )
-        ConcretePhysicalTable table = Mock(ConcretePhysicalTable)
+        StrictPhysicalTable table = Mock(StrictPhysicalTable)
         table.dataSourceName >> DataSourceName.of("test")
 
         when: "loader issues a metadata query"

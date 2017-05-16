@@ -7,7 +7,7 @@ import com.yahoo.bard.webservice.data.time.DefaultTimeGrain
 import com.yahoo.bard.webservice.druid.model.datasource.DataSource
 import com.yahoo.bard.webservice.druid.model.query.DruidAggregationQuery
 import com.yahoo.bard.webservice.metadata.DataSourceMetadataService
-import com.yahoo.bard.webservice.table.ConcretePhysicalTable
+import com.yahoo.bard.webservice.table.StrictPhysicalTable
 import com.yahoo.bard.webservice.util.GroovyTestUtils
 
 import com.fasterxml.jackson.databind.ObjectMapper
@@ -70,7 +70,7 @@ class CardinalityAggregationSpec extends Specification {
         //       Consequently, query's also need this to be serialized.
         DruidAggregationQuery query = Mock(DruidAggregationQuery)
         DataSource ds = Mock(DataSource)
-        ds.getPhysicalTables() >> [new ConcretePhysicalTable(
+        ds.getPhysicalTables() >> [new StrictPhysicalTable(
                 "table",
                 DefaultTimeGrain.DAY.buildZonedTimeGrain(DateTimeZone.UTC),
                 [] as Set,

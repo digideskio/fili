@@ -29,7 +29,7 @@ import com.yahoo.bard.webservice.druid.model.query.Granularity
 import com.yahoo.bard.webservice.druid.model.query.GroupByQuery
 import com.yahoo.bard.webservice.logging.RequestLog
 import com.yahoo.bard.webservice.metadata.DataSourceMetadataService
-import com.yahoo.bard.webservice.table.ConcretePhysicalTable
+import com.yahoo.bard.webservice.table.StrictPhysicalTable
 import com.yahoo.bard.webservice.table.Schema
 import com.yahoo.bard.webservice.web.DataApiRequest
 import com.yahoo.bard.webservice.web.ResponseFormatType
@@ -146,7 +146,7 @@ class ResultSetResponseProcessorSpec extends Specification {
         groupByQuery.getDimensions() >> dimensions
         groupByQuery.getAggregations() >> aggregations
         groupByQuery.getPostAggregations() >> postAggs
-        groupByQuery.getDataSource() >> new TableDataSource(new ConcretePhysicalTable("table_name", DAY.buildZonedTimeGrain(DateTimeZone.UTC), [] as Set, ["dimension1":"dimension1"], Mock(DataSourceMetadataService)))
+        groupByQuery.getDataSource() >> new TableDataSource(new StrictPhysicalTable("table_name", DAY.buildZonedTimeGrain(DateTimeZone.UTC), [] as Set, ["dimension1":"dimension1"], Mock(DataSourceMetadataService)))
 
         ResultSetSchema schema = new ResultSetSchema(DAY, Sets.newHashSet(new MetricColumn("lm1")))
 

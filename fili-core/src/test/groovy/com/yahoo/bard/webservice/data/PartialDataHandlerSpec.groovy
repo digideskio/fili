@@ -13,7 +13,7 @@ import com.yahoo.bard.webservice.druid.model.query.AllGranularity
 import com.yahoo.bard.webservice.druid.model.query.GroupByQuery
 import com.yahoo.bard.webservice.metadata.TestDataSourceMetadataService
 import com.yahoo.bard.webservice.table.Column
-import com.yahoo.bard.webservice.table.ConcretePhysicalTable
+import com.yahoo.bard.webservice.table.StrictPhysicalTable
 import com.yahoo.bard.webservice.table.resolver.QueryPlanningConstraint
 import com.yahoo.bard.webservice.util.SimplifiedIntervalList
 
@@ -29,7 +29,7 @@ class PartialDataHandlerSpec extends Specification {
     PartialDataHandler partialDataHandler = new PartialDataHandler()
 
     Dimension dim1, dim2, dim3
-    ConcretePhysicalTable table
+    StrictPhysicalTable table
 
     Set<String> columnNames
     GroupByQuery groupByQuery = Mock(GroupByQuery.class)
@@ -64,7 +64,7 @@ class PartialDataHandlerSpec extends Specification {
                 'page_views': buildIntervals(["2014-07-04/2014-07-29"]) as Set
         ]
 
-        table = new ConcretePhysicalTable(
+        table = new StrictPhysicalTable(
                 "basefact_network",
                 DAY.buildZonedTimeGrain(UTC),
                 [new Column("userDeviceType"), new Column("property"), new Column("os"), new Column("page_views")] as Set,

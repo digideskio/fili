@@ -28,7 +28,7 @@ import com.yahoo.bard.webservice.druid.model.postaggregation.FieldAccessorPostAg
 import com.yahoo.bard.webservice.druid.model.postaggregation.PostAggregation
 import com.yahoo.bard.webservice.metadata.DataSourceMetadataService
 import com.yahoo.bard.webservice.table.Column
-import com.yahoo.bard.webservice.table.ConcretePhysicalTable
+import com.yahoo.bard.webservice.table.StrictPhysicalTable
 import com.yahoo.bard.webservice.util.GroovyTestUtils
 
 import com.fasterxml.jackson.databind.ObjectMapper
@@ -105,7 +105,7 @@ class GroupByQuerySpec extends Specification {
     GroupByQuery defaultQuery(Map vars) {
 
         vars.dataSource = vars.dataSource ?: new TableDataSource<GroupByQuery>(
-                new ConcretePhysicalTable(
+                new StrictPhysicalTable(
                         "table_name",
                         day,
                         [] as Set,
@@ -192,7 +192,7 @@ class GroupByQuerySpec extends Specification {
 
     def "check dataSource serialization"() {
         //non nested query
-        DataSource ds1 = new TableDataSource(new ConcretePhysicalTable("table_name", day, [] as Set, [:], Mock(DataSourceMetadataService)))
+        DataSource ds1 = new TableDataSource(new StrictPhysicalTable("table_name", day, [] as Set, [:], Mock(DataSourceMetadataService)))
         GroupByQuery dq1 = defaultQuery(dataSource: ds1)
 
         //nested query
@@ -478,8 +478,8 @@ class GroupByQuerySpec extends Specification {
 
     def "Check innermost query injection"() {
         setup:
-        TableDataSource inner1 = new TableDataSource(new ConcretePhysicalTable("inner1", day, [] as Set, [:], Mock(DataSourceMetadataService)))
-        TableDataSource inner2 = new TableDataSource(new ConcretePhysicalTable("inner2", day, [] as Set, [:], Mock(DataSourceMetadataService)))
+        TableDataSource inner1 = new TableDataSource(new StrictPhysicalTable("inner1", day, [] as Set, [:], Mock(DataSourceMetadataService)))
+        TableDataSource inner2 = new TableDataSource(new StrictPhysicalTable("inner2", day, [] as Set, [:], Mock(DataSourceMetadataService)))
         GroupByQuery dq1 = defaultQuery(dataSource: inner1)
         DataSource outer1 = new QueryDataSource(dq1)
         GroupByQuery dq2 = defaultQuery(dataSource: outer1)
@@ -500,7 +500,7 @@ class GroupByQuerySpec extends Specification {
         List<Interval> endingIntervals = [Interval.parse("2016/2017")]
 
         and: "A nested query"
-        TableDataSource table = new TableDataSource(new ConcretePhysicalTable("inner1", day, [] as Set, [:], Mock(DataSourceMetadataService)))
+        TableDataSource table = new TableDataSource(new StrictPhysicalTable("inner1", day, [] as Set, [:], Mock(DataSourceMetadataService)))
         GroupByQuery inner = defaultQuery(dataSource: table, intervals: startingIntervals)
         GroupByQuery middle = defaultQuery(dataSource: new QueryDataSource<>(inner), intervals: startingIntervals)
         GroupByQuery outer = defaultQuery(dataSource: new QueryDataSource<>(middle), intervals: startingIntervals)

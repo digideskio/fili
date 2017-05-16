@@ -22,7 +22,7 @@ import com.yahoo.bard.webservice.druid.model.query.Granularity;
 import com.yahoo.bard.webservice.druid.model.query.GroupByQuery;
 import com.yahoo.bard.webservice.druid.model.query.TimeSeriesQuery;
 import com.yahoo.bard.webservice.druid.model.query.TopNQuery;
-import com.yahoo.bard.webservice.table.ConcretePhysicalTable;
+import com.yahoo.bard.webservice.table.StrictPhysicalTable;
 import com.yahoo.bard.webservice.table.LogicalTable;
 import com.yahoo.bard.webservice.table.LogicalTableDictionary;
 import com.yahoo.bard.webservice.table.PhysicalTable;
@@ -254,7 +254,7 @@ public class DruidQueryBuilder {
      * @return A table datasource for a fact table or a union data source for a fact table view
      */
     private DataSource buildTableDataSource(PhysicalTable table) {
-        if (table instanceof ConcretePhysicalTable) {
+        if (table instanceof StrictPhysicalTable) {
             return new TableDataSource((SingleDataSourcePhysicalTable) table);
         } else {
             return new UnionDataSource(Sets.newHashSet(table));

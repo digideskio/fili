@@ -6,7 +6,7 @@ package com.yahoo.bard.webservice.druid.model.query
 import static com.yahoo.bard.webservice.data.time.DefaultTimeGrain.DAY
 
 import com.yahoo.bard.webservice.metadata.DataSourceMetadataService
-import com.yahoo.bard.webservice.table.ConcretePhysicalTable
+import com.yahoo.bard.webservice.table.StrictPhysicalTable
 import com.yahoo.bard.webservice.data.dimension.Dimension
 import com.yahoo.bard.webservice.data.dimension.DimensionField
 import com.yahoo.bard.webservice.data.dimension.MapStore
@@ -46,7 +46,7 @@ class DruidSearchQuerySpec extends Specification {
     DruidSearchQuery defaultQuery(Map vars) {
         vars.queryType = DefaultQueryType.SEARCH
         vars.dataSource = vars.dataSource ?: new TableDataSource(
-                new ConcretePhysicalTable(
+                new StrictPhysicalTable(
                         "table_name",
                         DAY.buildZonedTimeGrain(DateTimeZone.UTC),
                         [] as Set,

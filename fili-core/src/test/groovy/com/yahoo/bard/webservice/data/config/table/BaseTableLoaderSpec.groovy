@@ -17,7 +17,7 @@ import com.yahoo.bard.webservice.data.dimension.DimensionColumn
 import com.yahoo.bard.webservice.data.dimension.impl.KeyValueStoreDimension
 import com.yahoo.bard.webservice.data.time.DefaultTimeGrain
 import com.yahoo.bard.webservice.metadata.DataSourceMetadataService
-import com.yahoo.bard.webservice.table.ConcretePhysicalTable
+import com.yahoo.bard.webservice.table.StrictPhysicalTable
 import com.yahoo.bard.webservice.table.PhysicalTable
 import com.yahoo.bard.webservice.table.PhysicalTableSchema
 import com.yahoo.bard.webservice.table.TableGroup
@@ -64,7 +64,7 @@ class BaseTableLoaderSpec extends Specification {
         @Override
         PhysicalTable build(ResourceDictionaries dictionaries, DataSourceMetadataService metadataService) {
             physicalTable ?:
-                    new ConcretePhysicalTable(
+                    new StrictPhysicalTable(
                             TableName.of(getName().asName()),
                             DefaultTimeGrain.DAY.buildZonedTimeGrain(DateTimeZone.UTC),
                             [] as Set,
