@@ -26,6 +26,7 @@ import com.yahoo.bard.webservice.table.ConcretePhysicalTable;
 import com.yahoo.bard.webservice.table.LogicalTable;
 import com.yahoo.bard.webservice.table.LogicalTableDictionary;
 import com.yahoo.bard.webservice.table.PhysicalTable;
+import com.yahoo.bard.webservice.table.SingleDataSourcePhysicalTable;
 import com.yahoo.bard.webservice.table.TableGroup;
 import com.yahoo.bard.webservice.table.TableIdentifier;
 import com.yahoo.bard.webservice.table.resolver.NoMatchFoundException;
@@ -254,7 +255,7 @@ public class DruidQueryBuilder {
      */
     private DataSource buildTableDataSource(PhysicalTable table) {
         if (table instanceof ConcretePhysicalTable) {
-            return new TableDataSource((ConcretePhysicalTable) table);
+            return new TableDataSource((SingleDataSourcePhysicalTable) table);
         } else {
             return new UnionDataSource(Sets.newHashSet(table));
         }

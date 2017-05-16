@@ -19,6 +19,7 @@ import com.yahoo.bard.webservice.druid.model.query.RegexSearchQuerySpec;
 import com.yahoo.bard.webservice.druid.model.query.SearchQuerySpec;
 import com.yahoo.bard.webservice.table.ConcretePhysicalTable;
 import com.yahoo.bard.webservice.table.PhysicalTableDictionary;
+import com.yahoo.bard.webservice.table.SingleDataSourcePhysicalTable;
 import com.yahoo.bard.webservice.web.handlers.RequestContext;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -134,7 +135,7 @@ public class DruidDimensionsLoader extends Loader<Boolean> {
 
         this.dataSources = physicalTableDictionary.values().stream()
                 .filter(physicalTable -> physicalTable instanceof ConcretePhysicalTable)
-                .map(physicalTable -> (ConcretePhysicalTable) physicalTable)
+                .map(physicalTable -> (SingleDataSourcePhysicalTable) physicalTable)
                 .map(TableDataSource::new)
                 .collect(Collectors.toList());
     }

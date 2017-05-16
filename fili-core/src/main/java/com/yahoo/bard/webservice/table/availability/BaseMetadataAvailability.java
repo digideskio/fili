@@ -66,7 +66,7 @@ public abstract class BaseMetadataAvailability implements Availability {
 
     @Override
     public boolean equals(Object obj) {
-        if (obj.getClass().equals(this.getClass()) && obj instanceof BaseMetadataAvailability) {
+        if (obj instanceof BaseMetadataAvailability && this.getClass().equals(obj.getClass())) {
             BaseMetadataAvailability that = (BaseMetadataAvailability) obj;
             return Objects.equals(getDataSourceName().asName(), that.getDataSourceName().asName())
                     // Since metadata service is mutable, use instance equality to ensure table equality is stable

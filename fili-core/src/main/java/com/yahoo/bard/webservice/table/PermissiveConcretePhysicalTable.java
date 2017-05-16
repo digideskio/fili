@@ -20,9 +20,7 @@ import javax.validation.constraints.NotNull;
  * {@link PermissiveAvailability}. The different Availability affects how available intervals of the table are
  * calculated and returned.
  */
-public class PermissiveConcretePhysicalTable extends BasePhysicalTable {
-
-    private final DataSourceName dataSourceName;
+public class PermissiveConcretePhysicalTable extends SingleDataSourcePhysicalTable {
 
     /**
      * Create a permissive concrete physical table.
@@ -72,11 +70,6 @@ public class PermissiveConcretePhysicalTable extends BasePhysicalTable {
                 logicalToPhysicalColumnNames,
                 availability
         );
-        this.dataSourceName = availability.getDataSourceName();
-    }
-
-    public DataSourceName getDataSourceName() {
-        return dataSourceName;
     }
 
     @Override
