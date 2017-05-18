@@ -9,6 +9,11 @@ Current
 -------
 ### Added:
 
+- [Implement PartialDataV2ResponseProcessor](https://github.com/yahoo/fili/pull/275)
+    * Add `FullResponseProcessor` interface that extends `ResponseProcessor`
+    * Add response status code to JSON response
+    * Add `PartialDataV2ResponseProcessor` that checks for any missing data that's not being found
+
 - [Prepare For Partial Data V2](https://github.com/yahoo/fili/pull/264)
     * Add new query context for druid's uncovered interval feature
     * Add a configurable property named "druid_uncovered_interval_limit"

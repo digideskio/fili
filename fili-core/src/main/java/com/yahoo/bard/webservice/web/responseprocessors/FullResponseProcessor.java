@@ -3,9 +3,10 @@
 package com.yahoo.bard.webservice.web.responseprocessors;
 
 /**
- * Response processor for partial data V2 and cache data V3.
+ * Response processor for that extracts header information from Druid response and put the information in our own
+ * response.
  * <p>
- * The full response processor also process header information about query response.
+ * This is a "Full" response process in a sense that it extracts and incorporates header information.
  */
 public interface FullResponseProcessor extends ResponseProcessor {
 }
