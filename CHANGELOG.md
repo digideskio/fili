@@ -8,6 +8,12 @@ pull request if there was one.
 Current
 -------
 ### Added:
+- [Implement PartialDataV2RequestHandler](https://github.com/yahoo/fili/pull/287)
+    * Implement `PartialDataV2RequestHandler` that injects "uncoveredIntervalsLimit: $druid_uncovered_interval_limit"
+      context to Druid query.
+    * Append `PartialDataV2ResponseProcessor` to the current next `ResponseProcessor` chain
+    * Add `PartialDataV2RequestHandler` to `DruidWorkflow` between `AsyncDruidRequestHandler` and
+      `CacheV2RequestHandler` and include a check for `druid_uncovered_interval_limit` is greater than or equals to 0
 
 - [Prepare For Partial Data V2](https://github.com/yahoo/fili/pull/264)
     * Add new query context for druid's uncovered interval feature

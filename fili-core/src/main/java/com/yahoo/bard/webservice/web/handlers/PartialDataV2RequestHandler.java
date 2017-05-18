@@ -11,13 +11,16 @@ import com.yahoo.bard.webservice.web.responseprocessors.ResponseProcessor;
 import javax.validation.constraints.NotNull;
 
 /**
- * A request handler that builds responses which filter partial data V2.
+ * A request handler that builds responses for partial data v2
+ * <p>
+ * The handler inject "uncoveredIntervalsLimit: $druid_uncovered_interval_limit" context to Druid query.
  */
 public class PartialDataV2RequestHandler implements DataRequestHandler {
 
     private static final SystemConfig SYSTEM_CONFIG = SystemConfigProvider.getInstance();
 
     private final DataRequestHandler next;
+    private final int uncoveredIntervalsLimit;
 
     /**
      * Constructor.
@@ -26,6 +29,10 @@ public class PartialDataV2RequestHandler implements DataRequestHandler {
      */
     public PartialDataV2RequestHandler(@NotNull DataRequestHandler next) {
         this.next = next;
+        this.uncoveredIntervalsLimit = SYSTEM_CONFIG.getIntProperty(
+                SYSTEM_CONFIG.getPackageVariableName("druid_uncovered_interval_limit"),
+                0
+        );
     }
 
     @Override
@@ -38,14 +45,7 @@ public class PartialDataV2RequestHandler implements DataRequestHandler {
         return next.handleRequest(
                 context,
                 request,
-                druidQuery.withContext(
-                        druidQuery.getContext().withUncoveredIntervalsLimit(
-                                SYSTEM_CONFIG.getIntProperty(
-                                        SYSTEM_CONFIG.getPackageVariableName("druid_uncovered_interval_limit"),
-                                        0
-                                )
-                        )
-                ),
+                druidQuery.withContext(druidQuery.getContext().withUncoveredIntervalsLimit(uncoveredIntervalsLimit)),
                 response
         );
     }
