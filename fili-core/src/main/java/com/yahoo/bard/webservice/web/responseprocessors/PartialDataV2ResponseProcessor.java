@@ -139,7 +139,7 @@ public class PartialDataV2ResponseProcessor implements FullResponseProcessor {
      */
     @Override
     public void processResponse(JsonNode json, DruidAggregationQuery<?> query, LoggingContext metadata) {
-        validateJsonResponse(json);
+        validateJsonResponse(json, query);
 
         int statusCode = json.get("status-code").asInt();
         if (statusCode == Status.OK.getStatusCode()) {
@@ -162,31 +162,37 @@ public class PartialDataV2ResponseProcessor implements FullResponseProcessor {
      * </ul>
      *
      * @param json  The JSON response that is to be validated
+     * @param druidQuery  The query with the schema for processing this response
      */
-    private static void validateJsonResponse(JsonNode json) {
+    private void validateJsonResponse(JsonNode json, DruidAggregationQuery<?> druidQuery) {
         if (!json.has("X-Druid-Response-Context")) {
-            logAndThrowRunTimeException("Response is missing X-Druid-Response-Context");
+            logAndGetErrorCallback("Response is missing X-Druid-Response-Context", druidQuery);
         }
         if (!json.get("X-Druid-Response-Context").has("uncoveredIntervals")) {
-            logAndThrowRunTimeException("Response is missing \"uncoveredIntervals\" X-Druid-Response-Context");
+            logAndGetErrorCallback("Response is missing 'uncoveredIntervals' X-Druid-Response-Context", druidQuery);
         }
         if (!json.get("X-Druid-Response-Context").has("uncoveredIntervalsOverflowed")) {
-            logAndThrowRunTimeException(
-                    "Response is missing \"uncoveredIntervalsOverflowed\" X-Druid-Response-Context"
+            logAndGetErrorCallback(
+                    "Response is missing 'uncoveredIntervalsOverflowed' X-Druid-Response-Context",
+                    druidQuery
             );
         }
         if (!json.has("status-code")) {
-            logAndThrowRunTimeException("Response is missing response status code");
+            logAndGetErrorCallback("Response is missing response status code", druidQuery);
         }
     }
 
     /**
-     * Logs and throws RuntimeException with the provided error message.
+     * Logs and gets error call back on the response with the provided error message.
      *
-     * @param message  The error message passed to the logger and the exception.
+     * @param message  The error message passed to the logger and the exception
+     * @param druidQuery  The query with the schema for processing this response
      */
-    private static void logAndThrowRunTimeException(String message) {
+    private void logAndGetErrorCallback(String message, DruidAggregationQuery<?> druidQuery) {
         LOG.error(message);
-        throw new RuntimeException(message);
+        getErrorCallback(druidQuery).dispatch(
+                Status.INTERNAL_SERVER_ERROR.getStatusCode(),
+                "The server encountered an unexpected condition which prevented it from fulfilling the request.",
+                message);
     }
 }
